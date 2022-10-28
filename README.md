@@ -12,7 +12,7 @@ To start api:
 
 
 ```
-python api.py --address '0.0.0.0' --port 5000 --model_path 'model.h5'
+python api.py --address '0.0.0.0' --port 5000 --model_path './model.h5'
 ```
 
 To use the service:
