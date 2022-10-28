@@ -27,7 +27,6 @@ class Classificator:
         im_binary = base64.b64decode(image_string[0])
         buf = io.BytesIO(im_binary)
         image = Image.open(buf)
-        image = image.resize(self.dim, Image.ANTIALIAS)
         image = np.array(image)[:,:,:3]
         return image
     

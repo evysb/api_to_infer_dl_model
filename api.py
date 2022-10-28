@@ -1,16 +1,18 @@
 from flask import request,jsonify,Flask, Response
 import argparse
 import logging
-import infer_novelty
 import classificator
 import json
 logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-9s) %(message)s',)
+import tensorflow
+
+print(tensorflow.__version__)
 
 
-def do_inference(autoencoder_model, image_string):
-    classificator = classificator.Classificator(autoencoder_model, image_string)
+def do_inference(model, image_string):
+    classificator_obj = classificator.Classificator(model, image_string)
         
-    class_result = classificator.get_classification()
+    class_result = classificator_obj.get_classification()
     return class_result
 
 
@@ -43,10 +45,10 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser('Similarity API')
     parser.add_argument('--address', '-a', help='Host address.', type=str, required=False, default='0.0.0.0')
     parser.add_argument('--port', '-p', help='Host port.', type=int, required=False, default=5000)
-    parser.add_argument('--model_path', '-f', help='autoencoder model path', type=str, required=True, default="model.h5")
+    parser.add_argument('--model_path', '-f', help='model path', type=str, required=False, default="model.h5")
     args = parser.parse_args()
 
-    model = infer_novelty.get_model(args.model_path, depth=3, filters=(32, 64), latentDim= 1024)
+    model = tensorflow.keras.models.load_model(args.model_path)
     
     print(f"Running on 'https://{args.address}:{args.port}'.\nPress Ctrl + C to finish.")
     app.run(debug=False, host=args.address, port=args.port)
