@@ -19,7 +19,7 @@ def do_inference(model, image_string):
 app = Flask(__name__)
 
 
-@app.route('/api/1.0/inference', methods=['POST'])
+@app.route('/api/1.0/inference', methods=['POST']) # @ decorator - em qual link essa informação vai aparecer
 def inference():
     data = request.form.to_dict(flat=False)
     image = data['image']
