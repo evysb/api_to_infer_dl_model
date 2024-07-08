@@ -9,15 +9,21 @@ import tensorflow
 print(tensorflow.__version__)
 
 
+############ INICIO - Pode criar funcoes auxiliares para deixar codigo mais organizado
+
 def do_inference(model, image_string):
     classificator_obj = classificator.Classificator(model, image_string)
         
     class_result = classificator_obj.get_classification()
     return class_result
 
+############ FIM - Pode criar funcoes auxiliares para deixar codigo mais organizado
+
 
 app = Flask(__name__)
 
+
+############ INICIO - Pode editar e criar novos endpoints
 
 @app.route('/api/1.0/inference', methods=['POST']) # @ decorator - em qual link essa informação vai aparecer
 def inference():
@@ -26,6 +32,9 @@ def inference():
     output = do_inference(model, image)
     response = {'class': output}
     return Response(response=json.dumps(response), status=200, mimetype='application/json')
+
+############ FIM - Pode editar e criar novos endpoints
+
 
 
 
@@ -48,7 +57,7 @@ if __name__=='__main__':
     parser.add_argument('--model_path', '-f', help='model path', type=str, required=False, default="model.h5")
     args = parser.parse_args()
 
-    model = tensorflow.keras.models.load_model(args.model_path)
+    model = tensorflow.keras.models.load_model(args.model_path) #onde carrega o modelo em memoria
     
     print(f"Running on 'https://{args.address}:{args.port}'.\nPress Ctrl + C to finish.")
     app.run(debug=False, host=args.address, port=args.port)
