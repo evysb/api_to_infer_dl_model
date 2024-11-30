@@ -8,19 +8,24 @@ import tensorflow
 
 print(tensorflow.__version__)
 
+app = Flask(__name__)
+
+
+
 
 ############ INICIO - Pode criar funcoes auxiliares para deixar codigo mais organizado
 
 def do_inference(model, image_string):
     classificator_obj = classificator.Classificator(model, image_string)
         
-    class_result = classificator_obj.get_classification()
-    return class_result
+    class_result, predIdxs = classificator_obj.get_classification()
+    return class_result, predIdxs
 
 ############ FIM - Pode criar funcoes auxiliares para deixar codigo mais organizado
 
 
-app = Flask(__name__)
+
+
 
 
 ############ INICIO - Pode editar e criar novos endpoints
@@ -29,11 +34,13 @@ app = Flask(__name__)
 def inference():
     data = request.form.to_dict(flat=False)
     image = data['image']
-    output = do_inference(model, image)
-    response = {'class': output}
+    output1, output2 = do_inference(model, image) # onde de fato faz o processamento
+    response = {'class': output1, 'probabilidades': str(output2)}
     return Response(response=json.dumps(response), status=200, mimetype='application/json')
 
 ############ FIM - Pode editar e criar novos endpoints
+
+
 
 
 

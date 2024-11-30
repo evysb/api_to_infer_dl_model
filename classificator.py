@@ -18,10 +18,13 @@ class Classificator:
     
     def get_classification(self): # codigo copiado e colado do treinamento do modelo
         image_processed = self._preprocessing(self.image)
-        predIdxs = self.model.predict(image_processed, batch_size=1)
-        predIdxs = np.argmax(predIdxs, axis=1)
+        predIdxs_original = self.model.predict(image_processed, batch_size=1)
+        print(predIdxs_original)
+        predIdxs = np.argmax(predIdxs_original, axis=1)
         class_predicted = self.classes_list[predIdxs[0]]
-        return class_predicted
+        return class_predicted, predIdxs_original
+    
+        
     
     def _get_data_from_request(self, image_string): # codigo para decodificar arquivo que chegou no servidor
         im_binary = base64.b64decode(image_string[0])
@@ -34,5 +37,5 @@ class Classificator:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (224, 224))
         image = image / 255.
-        image = np.expand_dims(image, axis=0)
+        image = np.expand_dims(image, axis=0)# 1,224,224,3
         return image
